@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intelligent Library System - Login / Signup</title>
+<style>
+:root{
+  --bg-dark:#030416;
+  --primary:#0ea5ff;
+  --muted:#9aa6bf;
+  --card:#07102a;
+  --glass: rgba(255,255,255,0.04);
+  --accent-glow: 0 10px 30px rgba(14,165,255,0.12);
+  --radius:14px;
+  --accent-gradient: linear-gradient(90deg,#0ea5ff,#7c3aed);
+  font-family:"Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  min-height:100vh;
+  background: radial-gradient(1200px 600px at 10% 10%, rgba(124,58,237,0.06), transparent 8%),
+              radial-gradient(1000px 500px at 90% 90%, rgba(14,165,255,0.03), transparent 8%),
+              linear-gradient(180deg,#000814 0%, #02021a 60%);
+  color:#e6eef8;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family: "Inter", sans-serif;
+  padding:20px;
+}
+
+/* CARD STYLE */
+.card{
+  width:400px;
+  background: rgba(7,16,42,0.85);
+  border-radius: var(--radius);
+  padding:28px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+.logo{
+  width:120px;height:120px;
+  display:block;margin:0 auto 16px auto;
+  object-fit:contain;border-radius:12px;
+  border:1px solid rgba(255,255,255,0.05);
+}
+h2{text-align:center;color:white;margin:6px 0 18px 0;font-size:1.4rem; font-weight:800;}
+label{
+  display:block;margin:8px 0 6px 0;color:var(--muted);
+  font-size:0.9rem;
+}
+input,select{
+  width:100%;
+  padding:12px 14px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.15);
+  outline:none;
+  font-size:0.95rem;
+  background: rgba(255,255,255,0.04);
+  color:white;
+}
+input::placeholder, select::placeholder{ color: rgba(255,255,255,0.5);}
+input:focus,select:focus{
+  border-color: var(--primary);
+  box-shadow: 0 8px 24px rgba(14,165,255,0.12);
+  background: rgba(255,255,255,0.08);
+}
+.btn{
+  width:100%;
+  padding:12px;
+  margin-top:14px;
+  border:none;
+  border-radius:12px;
+  background: var(--accent-gradient);
+  color:#001022;
+  font-weight:700;
+  cursor:pointer;
+  font-size:1rem;
+  transition: all 0.2s ease;
+}
+.btn:hover{ transform: translateY(-2px); box-shadow: var(--accent-glow);}
+.btn.secondary{
+  background:transparent;
+  color: var(--primary);
+  border:2px solid rgba(14,165,255,0.3);
+}
+.muted-text{text-align:center;font-size:0.85rem;margin-top:12px;color:var(--muted);}
+.success{background:#0ea5ff1a;padding:10px;border-radius:8px;color:#06b6d4;margin-bottom:8px;}
+.error{background:#f8717114;padding:10px;border-radius:8px;color:#f87171;margin-bottom:8px;}
+
+/* Dropdown option styling */
+select option {
+  background-color: #ffffffcc;
+  color: #000000;
+  padding: 8px 10px;
+}
+select:focus { color:#000; background: rgba(255,255,255,0.1);}
+select option:hover { background-color: #0ea5ff33; color:#000;}
+</style>
+</head>
+<>
+
+<!-- LOGIN CARD -->
+<div class="card" id="loginCard">
+  <img src="budhha.png.png" class="logo" alt="Logo">
+  <h2>Login</h2>
+  <div id="loginMsg"></div>
+
+  <!-- ADDED ROLE SELECTOR -->
+  <label>Select Role</label>
+  <select id="loginRole">
+    <option value="">--Select--</option>
+    <option value="Student">Student</option>
+    <option value="Teacher">Teacher</option>
+    <option value="Librarian">Librarian</option>
+  </select>
+
+  <label for="loginEmail">Email</label>
+  <input id="loginEmail" type="email" autocomplete="username" placeholder="Enter Email">
+  <label for="loginPass">Password</label>
+  <input id="loginPass" type="password" autocomplete="current-password" placeholder="Enter Password">
+  <button type="button" class="btn" id="loginBtn">Login</button>
+  <button type="button" class="btn secondary" id="showSignupBtn">New? Create Account</button>
+  <p class="muted-text">Use same browser. Demo stores data locally.</p>
+</div>
+
+<!-- SIGNUP CARD -->
+<div class="card" id="signupCard" style="display:none;">
+  <img src="budhha.png.png" class="logo" alt="Logo">
+  <h2>Signup</h2>
+  <div id="signupMsg"></div>
+  
+  <label for="roleSelect">Select Role</label>
+  <select id="roleSelect">
+    <option value="">--Select Role--</option>
+    <option value="Student">Student</option>
+    <option value="Teacher">Teacher</option>
+    <option value="Librarian">Librarian</option>
+  </select>
+
+  <div id="studentFields" style="display:none;">
+    <label>Full Name</label><input id="stuName" type="text">
+    <label>Email</label><input id="stuEmail" type="email">
+    <label>Mobile</label><input id="stuMobile" type="tel" maxlength="10">
+    <label>Roll No.</label><input id="stuRoll" type="text">
+    <label>Year</label>
+    <select id="stuYear">
+      <option value="">Select Year</option>
+      <option>1st Year</option>
+      <option>2nd Year</option>
+      <option>3rd Year</option>
+      <option>4th Year</option>
+    </select>
+    <label>Course</label>
+    <select id="stuCourse">
+      <option value="">Select Course</option>
+      <option>B.Tech</option>
+      <option>M.Tech</option>
+      <option>BCA</option>
+      <option>MCA</option>
+      <option>BSc</option>
+      <option>Other</option>
+    </select>
+    <div id="stuBranchDiv" style="display:none;">
+      <label>Branch</label>
+      <select id="stuBranch">
+        <option value="">Select Branch</option>
+        <option>Computer Science</option>
+        <option>CSE (Data Science)</option>
+        <option>CSE (AIML)</option>
+        <option>Information Technology (IT)</option>
+        <option>Electronics</option>
+        <option>Mechanical</option>
+        <option>Civil</option>
+        <option>Applied Science</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <label>Password</label><input id="stuPass" type="password">
+  </div>
+
+  <div id="teacherFields" style="display:none;">
+    <label>Full Name</label><input id="teachName" type="text">
+    <label>Email</label><input id="teachEmail" type="email">
+    <label>Mobile</label><input id="teachMobile" type="tel" maxlength="10">
+    <label>Department</label>
+    <select id="teachDept">
+      <option value="">Select Department</option>
+      <option>Computer Science</option>
+      <option>CSE (Data Science)</option>
+      <option>CSE (AIML)</option>
+      <option>Information Technology (IT)</option>
+      <option>Electronics</option>
+      <option>Mechanical</option>
+      <option>Civil</option>
+      <option>Applied Science</option>
+      <option>Other</option>
+    </select>
+    <label>Password</label><input id="teachPass" type="password">
+  </div>
+
+  <div id="librarianFields" style="display:none;">
+    <label>Full Name</label><input id="libName" type="text">
+    <label>Email</label><input id="libEmail" type="email">
+    <label>Mobile</label><input id="libMobile" type="tel" maxlength="10">
+    <label>Password</label><input id="libPass" type="password">
+  </div>
+
+  <button type="button" class="btn" id="signupBtn">Register</button>
+  <button type="button" class="btn secondary" id="backToLoginBtn">Back to Login</button>
+</div>
+
+<script>
+// Elements
+const loginCard=document.getElementById('loginCard');
+const signupCard=document.getElementById('signupCard');
+const showSignupBtn=document.getElementById('showSignupBtn');
+const backToLoginBtn=document.getElementById('backToLoginBtn');
+
+const loginEmail=document.getElementById('loginEmail');
+const loginPass=document.getElementById('loginPass');
+const loginMsg=document.getElementById('loginMsg');
+const loginBtn=document.getElementById('loginBtn');
+const loginRole=document.getElementById('loginRole');
+
+const roleSelect=document.getElementById('roleSelect');
+const studentFields=document.getElementById('studentFields');
+const teacherFields=document.getElementById('teacherFields');
+const librarianFields=document.getElementById('librarianFields');
+const stuCourse=document.getElementById('stuCourse');
+const stuBranchDiv=document.getElementById('stuBranchDiv');
+const signupBtn=document.getElementById('signupBtn');
+const signupMsg=document.getElementById('signupMsg');
+
+showSignupBtn.addEventListener('click',()=>{loginCard.style.display='none';signupCard.style.display='block';signupMsg.innerHTML='';});
+backToLoginBtn.addEventListener('click',()=>{signupCard.style.display='none';loginCard.style.display='block';signupMsg.innerHTML='';});
+
+roleSelect.addEventListener('change',()=>{
+  studentFields.style.display='none';
+  teacherFields.style.display='none';
+  librarianFields.style.display='none';
+  if(roleSelect.value==='Student') studentFields.style.display='block';
+  else if(roleSelect.value==='Teacher') teacherFields.style.display='block';
+  else if(roleSelect.value==='Librarian') librarianFields.style.display='block';
+});
+
+stuCourse.addEventListener('change',()=>{ if(stuCourse.value==='B.Tech'||stuCourse.value==='M.Tech') stuBranchDiv.style.display='block'; else stuBranchDiv.style.display='none'; });
+
+function showMsg(container,text,type='success'){container.innerHTML=`<div class="${type}">${text}</div>`;}
+async function hashText(msg){const enc=new TextEncoder().encode(msg);const buf=await crypto.subtle.digest('SHA-256',enc);return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');}
+function loadUsers(){try{return JSON.parse(localStorage.getItem('ils_users')||'[]');}catch(e){return[];}}
+function saveUsers(users){localStorage.setItem('ils_users',JSON.stringify(users));}
+
+function validatePassword(p){
+  if(!p||p.length<6) return{ok:false,msg:'Password कम से कम 6 वर्ण का होना चाहिए।'};
+  if(!/[A-Za-z]/.test(p)) return{ok:false,msg:'Password में एक अक्षर होना चाहिए।'};
+  if(!/[0-9]/.test(p)) return{ok:false,msg:'Password में एक अंक होना चाहिए।'};
+  return{ok:true};
+}
+
+// Signup
+signupBtn.addEventListener('click', async()=>{
+  signupMsg.innerHTML='';
+  const role=roleSelect.value;
+  if(!role) return showMsg(signupMsg,'Role चुनें।','error');
+
+  let user={role};
+
+  if(role==='Student'){
+    user.name=document.getElementById('stuName').value.trim();
+    user.email=document.getElementById('stuEmail').value.trim().toLowerCase();
+    user.mobile=document.getElementById('stuMobile').value.trim();
+    user.roll=document.getElementById('stuRoll').value.trim();
+    user.year=document.getElementById('stuYear').value;
+    user.course=document.getElementById('stuCourse').value;
+    user.branch=(stuBranchDiv.style.display==='block')?document.getElementById('stuBranch').value:'N/A';
+    user.pass=document.getElementById('stuPass').value;
+    if(!user.name||!user.email||!user.mobile||!user.roll||!user.year||!user.course||!user.pass)
+      return showMsg(signupMsg,'सभी फ़ील्ड भरें।','error');
+  }
+  else if(role==='Teacher'){
+    user.name=document.getElementById('teachName').value.trim();
+    user.email=document.getElementById('teachEmail').value.trim().toLowerCase();
+    user.mobile=document.getElementById('teachMobile').value.trim();
+    user.dept=document.getElementById('teachDept').value;
+    user.pass=document.getElementById('teachPass').value;
+    if(!user.name||!user.email||!user.mobile||!user.dept||!user.pass)
+      return showMsg(signupMsg,'सभी फ़ील्ड भरें।','error');
+  }
+  else if(role==='Librarian'){
+    user.name=document.getElementById('libName').value.trim();
+    user.email=document.getElementById('libEmail').value.trim().toLowerCase();
+    user.mobile=document.getElementById('libMobile').value.trim();
+    user.pass=document.getElementById('libPass').value;
+    if(!user.name||!user.email||!user.mobile||!user.pass)
+      return showMsg(signupMsg,'सभी फ़ील्ड भरें।','error');
+  }
+
+  const vp=validatePassword(user.pass);
+  if(!vp.ok) return showMsg(signupMsg,vp.msg,'error');
+
+  const users=loadUsers();
+  if(users.some(u=>u.email===user.email))
+    return showMsg(signupMsg,'ईमेल पहले से मौजूद है।','error');
+
+  user.passHash=await hashText(user.pass);
+  delete user.pass;
+
+  users.push(user);
+  saveUsers(users);
+
+  showMsg(signupMsg,'Account created successfully! अब लॉगिन करें।','success');
+
+  signupCard.style.display='none';
+  loginCard.style.display='block';
+  loginEmail.value=user.email;
+});
+
+// LOGIN FIXED HERE
+loginBtn.addEventListener('click', async()=>{
+  loginMsg.innerHTML='';
+  const role=loginRole.value;
+  const email=loginEmail.value.trim().toLowerCase();
+  const pass=loginPass.value;
+
+  if(!role) return showMsg(loginMsg,'Role चुनें।','error');
+  if(!email||!pass) return showMsg(loginMsg,'Email और Password डालें।','error');
+
+  // 🟦 FIXED TEACHER LOGIN
+  if(role==='Teacher'){
+    if(email==='bitteacher525@ac.in' && pass==='12345678'){
+      showMsg(loginMsg,'Teacher Login Successful!','success');
+      return setTimeout(()=>window.location.href='3teacher.html',700);
+    }
+    return showMsg(loginMsg,'Teacher Email या Password गलत है।','error');
+  }
+
+  // 🟩 FIXED LIBRARIAN LOGIN
+  if(role==='Librarian'){
+    if(email==='bitlibrary525@ac.in' && pass==='12345678'){
+      showMsg(loginMsg,'Librarian Login Successful!','success');
+      return setTimeout(()=>window.location.href='librarian.html',700);
+    }
+    return showMsg(loginMsg,'Librarian Email या Password गलत है।','error');
+  }
+
+  // 🟨 STUDENT LOGIN
+  const users=loadUsers();
+  const user=users.find(u=>u.email===email && u.role==='Student');
+  if(!user) return showMsg(loginMsg,'Student नहीं मिला।','error');
+
+  const passHash=await hashText(pass);
+  if(passHash!==user.passHash)
+    return showMsg(loginMsg,'Password गलत है।','error');
+
+  showMsg(loginMsg,'Login successful!','success');
+  setTimeout(()=>window.location.href='5student.html',700);
+});
+</script>
+

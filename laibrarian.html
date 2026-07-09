@@ -1,0 +1,305 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intelligent Library System</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet">
+<style>
+:root{
+  --primary:#0ea5ff;
+  --secondary:#7c3aed;
+  --muted:#9aa6bf;
+  --card:#07102a;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif;}
+body{
+  min-height:100vh;
+  background: radial-gradient(1200px 600px at 10% 10%, rgba(124,58,237,0.06), transparent 8%),
+              radial-gradient(1000px 500px at 90% 90%, rgba(14,165,255,0.03), transparent 8%),
+              linear-gradient(180deg,#000814 0%, #02021a 60%);
+  color:#e6eef8;
+  padding:20px;
+}
+.wrap{max-width:1400px;margin:0 auto;}
+header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:15px 20px;
+  background: var(--card);
+  border-radius:25px;
+  box-shadow:0 20px 50px rgba(0,0,0,0.3);
+  margin-bottom:30px;
+}
+header .logo-left img{height:60px;width:60px;border-radius:15px;object-fit:cover;}
+header h1{font-size:28px;color:white;font-weight:700;}
+.menu-dot{
+  cursor:pointer;font-size:24px;user-select:none;
+  padding:10px;border-radius:12px;transition:0.3s;background:rgba(14,165,255,0.1);color:white;
+}
+.menu-dot:hover{background:rgba(14,165,255,0.2);}
+.menu-content{
+  position:absolute;top:40px;right:0;background:rgba(7,16,42,0.95);
+  color:white;min-width:180px;border-radius:12px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.5);display:none;z-index:10;
+}
+.menu-content a{
+  display:block;padding:10px 15px;text-decoration:none;color:var(--primary);
+  font-weight:600;transition:0.3s;
+}
+.menu-content a:hover{
+  background:var(--primary);color:#001022;border-radius:10px;
+}
+.container{display:grid;grid-template-columns:1fr;gap:30px;}
+@media(min-width:1150px){.container{grid-template-columns:1fr 1fr;}}
+.card{
+  background: rgba(7,16,42,0.85);
+  border-radius: var(--radius);
+  padding:28px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+.tab-buttons{display:flex; gap:10px; margin-bottom:20px;}
+.tab-buttons button{
+  flex:1;padding:12px;border:none;border-radius:12px;cursor:pointer;
+  font-weight:600; transition:0.3s; background:rgba(255,255,255,0.05); color:var(--muted);
+}
+.tab-buttons button.active{background:linear-gradient(90deg,var(--primary),var(--secondary)); color:#001022;}
+.section{display:none;}
+.section.active{display:block;}
+.grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:15px;}
+.book-box{
+  background: rgba(255,255,255,0.05);
+  padding:18px;
+  border-radius:18px;
+  text-align:center;
+  cursor:pointer;
+  font-weight:600;
+  transition:0.4s;
+  position:relative;
+  box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+.book-box i{font-size:26px;margin-bottom:6px;}
+.book-box.taken{background: rgba(14,165,255,0.1); color:#0ea5ff;}
+.book-box.available{background: rgba(124,58,237,0.1); color:#7c3aed;}
+.book-box:hover{transform:translateY(-6px) scale(1.05); box-shadow:0 15px 35px rgba(0,0,0,0.3);}
+.input-group{margin-bottom:15px;}
+.input-group label{display:block;margin-bottom:5px;font-weight:600;color:var(--muted);}
+.input-group input, .input-group select{
+  width:100%; padding:10px 12px; border-radius:12px; border:1px solid rgba(255,255,255,0.15);
+  outline:none; background: rgba(14,165,255,0.1); color:white;
+}
+.input-group input::placeholder,.input-group select::placeholder{color:rgba(255,255,255,0.5);}
+.input-group input:focus,.input-group select:focus{border-color:var(--primary);background:rgba(14,165,255,0.15);}
+.btn{padding:10px 16px; border:none; border-radius:12px; cursor:pointer; font-weight:600; margin-top:8px; transition:0.3s;}
+.btn-primary{background: linear-gradient(90deg,var(--primary),var(--secondary)); color:#001022;}
+.btn-primary:hover{box-shadow:0 10px 30px rgba(14,165,255,0.12);}
+.btn-danger{background:#f87171; color:white;}
+.btn-danger:hover{background:#f8717114;}
+.student-info{margin-bottom:18px; font-size:15px; line-height:1.5;}
+/* Dark theme select & option fixes */
+select option{
+  background-color: rgba(7,16,42,0.95);
+  color:white;
+  padding:8px 10px;
+}
+select option:hover{
+  background-color: rgba(14,165,255,0.5);
+  color:#001022;
+}
+/* Custom arrow for select */
+.select-wrapper{position:relative;}
+.select-wrapper::after{
+  content:'▼';
+  position:absolute;
+  right:12px;
+  top:50%;
+  transform:translateY(-50%);
+  pointer-events:none;
+  color:white;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="logo-left"><img src="budhha.png.png" alt="Logo"/></div>
+  <h1>Intelligent Library System</h1>
+  <div class="menu-dot" id="menuDot">☰
+    <div class="menu-content" id="menuContent">
+      <a href="#">Dashboard</a>
+      <a href="#">Settings</a>
+      <a href="#">Logout</a>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="card">
+    <h2>Librarian Panel</h2>
+    <div class="tab-buttons">
+      <button class="active" data-tab="libraryTab">Library Management</button>
+      <button data-tab="studentsTab">Student Profiles</button>
+    </div>
+
+    <div class="section active" id="libraryTab">
+      <div class="input-group select-wrapper">
+        <label for="yearSelect">Select Year:</label>
+        <select id="yearSelect">
+          <option value="">--Choose Year--</option>
+          <option value="1 Year">1 Year</option>
+          <option value="2 Year">2 Year</option>
+          <option value="3 Year">3 Year</option>
+          <option value="4 Year">4 Year</option>
+        </select>
+      </div>
+      <div class="input-group select-wrapper">
+        <label for="subjectSelect">Select Subject:</label>
+        <select id="subjectSelect"><option value="">--Choose Subject--</option></select>
+      </div>
+      <div class="grid" id="booksGrid"></div>
+      <div class="input-group">
+        <input type="text" id="newBookName" placeholder="Enter new book name">
+        <button class="btn btn-primary" id="addBookBtn">Add Book</button>
+      </div>
+    </div>
+
+    <div class="section" id="studentsTab">
+      <div class="input-group">
+        <label for="rollNoInput">Enter Student Roll No.:</label>
+        <input type="text" id="rollNoInput" placeholder="Roll No">
+        <button class="btn btn-primary" id="viewStudentBtn">View Profile</button>
+      </div>
+      <div id="studentProfile"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+// Menu toggle
+document.getElementById('menuDot').addEventListener('click',()=>{
+  const menu = document.getElementById('menuContent');
+  menu.style.display = menu.style.display==='block'?'none':'block';
+});
+
+// Full College Library Data
+const COLLEGE_LIBRARY = {
+"1 Year": {
+  "Math 1": ["B.S. Grewal - Higher Engineering Mathematics", "NP Bali - Engineering Mathematics", "H.K. Dass - Advanced Engineering Mathematics", "Erwin Kreyszig - Advanced Engineering Mathematics"],
+  "Math 2": ["B.S. Grewal - Numerical Methods", "NP Bali - Integral Calculus Problems"],
+  "Physics": ["Resnick & Halliday - Fundamentals of Physics", "H.C. Verma - Concepts of Physics", "S.L. Gupta - Engineering Physics", "AKTU Physics Guide - Navneet"],
+  "Chemistry": ["O.P. Tandon - Physical Chemistry", "Jain & Jain - Organic Chemistry", "Shashi Chawla - Applied Chemistry"],
+  "PPS": ["E. Balagurusamy - Programming in ANSI C", "Herbert Schildt - C Programming", "Yashwant Kanetkar - Let Us C"],
+  "EVS": ["Erach Bharucha - Environmental Studies", "Benny Joseph - Environmental Studies"],
+  "Basic Electrical Engineering": ["V.K. Mehta - Principles of Electrical Engineering", "C.L. Wadhwa - Electrical Machines", "J.B. Gupta - Basic Electronics"]
+},
+"2 Year": {
+  "Data Structure": ["Narasimha Karumanchi - Data Structures & Algorithms", "Ellis Horowitz - Data Structures", "Yashwant Kanetkar - Data Structures"],
+  "COA": ["Morris Mano - Computer System Architecture", "Carl Hamacher - Computer Organization", "William Stallings - Computer Organization & Architecture"],
+  "DSTL": ["Rosen - Discrete Mathematics", "Schaum's Outline - Discrete Math (Lipschutz)"],
+  "ESE": ["Boylestad - Electronic Devices", "A.K. Sawhney - Electronic Devices & Circuits", "Sedra & Smith - Microelectronic Circuits"],
+  "Python Programming": ["Dr. Reema Thareja - Python Programming", "Eric Matthes - Python Crash Course"]
+},
+"3 Year": {
+  "Database Management": ["Raghu Ramakrishnan - Database Management Systems", "Navathe - Database Systems", "Korth - Database System Concepts"],
+  "Artificial Intelligence": ["Stuart Russell & Peter Norvig - AI: A Modern Approach", "Elaine Rich - Artificial Intelligence"],
+  "Design & Analysis of Algorithm": ["Cormen (CLRS) - Introduction to Algorithms", "Horowitz & Sahni - Fundamentals of Computer Algorithms"],
+  "Computer Networks": ["Behrouz Forouzan - Data Communications and Networking", "Tanenbaum - Computer Networks"],
+  "Software Engineering": ["Roger Pressman - Software Engineering", "Ian Sommerville - Software Engineering"]
+},
+"4 Year": {
+  "Machine Learning": ["Tom Mitchell - Machine Learning", "Aurélien Géron - Hands-On ML", "Christopher Bishop - Pattern Recognition and Machine Learning"],
+  "Cloud Computing": ["Rajkumar Buyya - Cloud Computing", "Thomas Erl - Cloud Computing Concepts"],
+  "Advanced AI": ["Russell & Norvig - Advanced AI Topics", "Saroj Kaushik - AI (AKTU focus)"]
+}
+};
+
+let selectedYear='', selectedSubject='';
+const yearSelect=document.getElementById('yearSelect');
+const subjectSelect=document.getElementById('subjectSelect');
+const booksGrid=document.getElementById('booksGrid');
+const newBookName=document.getElementById('newBookName');
+const addBookBtn=document.getElementById('addBookBtn');
+const rollNoInput=document.getElementById('rollNoInput');
+const viewStudentBtn=document.getElementById('viewStudentBtn');
+const studentProfile=document.getElementById('studentProfile');
+
+// Populate subjects dynamically
+yearSelect.addEventListener('change',()=>{
+  selectedYear = yearSelect.value;
+  subjectSelect.innerHTML='<option value="">--Choose Subject--</option>';
+  if(selectedYear && COLLEGE_LIBRARY[selectedYear]){
+    Object.keys(COLLEGE_LIBRARY[selectedYear]).forEach(sub=>{
+      const opt=document.createElement('option');
+      opt.value=sub; opt.textContent=sub;
+      subjectSelect.appendChild(opt);
+    });
+  }
+  booksGrid.innerHTML='';
+});
+
+subjectSelect.addEventListener('change',()=>{
+  selectedSubject = subjectSelect.value;
+  renderBooks();
+});
+
+// Render books grid
+function renderBooks(){
+  booksGrid.innerHTML='';
+  if(!selectedYear || !selectedSubject) return;
+  COLLEGE_LIBRARY[selectedYear][selectedSubject].forEach((b,i)=>{
+    const div=document.createElement('div');
+    div.className='book-box available';
+    div.innerHTML=`<i class="ri-book-open-fill"></i>${b}<button class="btn btn-danger" style="font-size:10px; position:absolute; top:5px; right:5px;">X</button>`;
+    div.querySelector('button').addEventListener('click',()=>{COLLEGE_LIBRARY[selectedYear][selectedSubject].splice(i,1); renderBooks();});
+    booksGrid.appendChild(div);
+  });
+}
+
+// Add book
+addBookBtn.addEventListener('click',()=>{
+  const name = newBookName.value.trim();
+  if(!name || !selectedYear || !selectedSubject) return alert('Select year, subject & enter book name');
+  COLLEGE_LIBRARY[selectedYear][selectedSubject].push(name);
+  newBookName.value='';
+  renderBooks();
+});
+
+// Tabs
+document.querySelectorAll('.tab-buttons button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-buttons button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+
+// Sample students
+const users=[
+  {rollNo:'101',fullName:'Rahul Sharma',branch:'CSE',course:'B.Tech',email:'rahul@example.com',mobile:'9876543210',books:[{name:"B.S. Grewal - Higher Engineering Mathematics",date:"10-Oct-2025"}]},
+  {rollNo:'102',fullName:'Anjali Singh',branch:'ECE',course:'B.Tech',email:'anjali@example.com',mobile:'9876501234',books:[]}
+];
+
+viewStudentBtn.addEventListener('click',()=>{
+  const roll = rollNoInput.value.trim();
+  const user = users.find(u=>u.rollNo===roll);
+  if(!user){studentProfile.innerHTML='<p style="color:red">Student not found!</p>'; return;}
+  let html=`<div class="student-info">
+      <b>Name:</b> ${user.fullName}<br>
+      <b>Roll No:</b> ${user.rollNo}<br>
+      <b>Branch:</b> ${user.branch}<br>
+      <b>Course:</b> ${user.course}<br>
+      <b>Mobile:</b> ${user.mobile}</div>
+      <h3>Borrowed Books:</h3>`;
+  if(user.books.length===0) html+='<p>No books borrowed.</p>';
+  else html+='<div class="grid">'+user.books.map(b=>`<div class="book-box taken"><i class="ri-book-2-fill"></i>${b.name}<br>${b.date}</div>`).join('')+'</div>';
+  studentProfile.innerHTML=html;
+});
+</script>
+</body>
+</html>

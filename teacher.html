@@ -1,0 +1,257 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Teacher - Intelligent Library System</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif}
+  body{background:linear-gradient(135deg,#c3f5f5,#fff);min-height:100vh;padding:28px}
+  .wrap{max-width:1200px;margin:0 auto}
+  header{display:flex;align-items:center;justify-content:space-between;padding:18px;border-radius:18px;background:linear-gradient(90deg,#0f766e,#2fb99b);color:#fff;box-shadow:0 20px 50px rgba(15,118,110,0.12)}
+  header .logo img{height:60px;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,0.2)}
+  header h1{font-size:20px;margin-left:12px}
+  .panel{display:grid;grid-template-columns:1fr 420px;gap:22px;margin-top:20px}
+  .card{background:#fff;padding:18px;border-radius:14px;box-shadow:0 12px 30px rgba(0,0,0,0.06)}
+  .controls .row{display:flex;gap:10px;align-items:center;margin-bottom:12px}
+  label{display:block;font-weight:700;color:#065f56;margin-bottom:6px}
+  select,input[type="text"]{width:100%;padding:10px;border-radius:10px;border:1px solid #e6f3ef;background:#fbfffe}
+  input[type="file"]{padding:6px}
+  .btn{padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
+  .btn.primary{background:linear-gradient(90deg,#0f766e,#2fb99b);color:#fff}
+  .btn.danger{background:#ff5e5e;color:#fff}
+  .muted{color:#667974;font-weight:600;font-size:13px}
+  .uploaded-list{display:grid;gap:10px;margin-top:12px}
+  .file-item{padding:12px;border-radius:10px;background:linear-gradient(180deg,#fff,#f4fdfb);display:flex;justify-content:space-between;align-items:center;box-shadow:0 6px 18px rgba(0,0,0,0.04)}
+  .file-meta{font-weight:700;color:#0b6b61}
+  .file-actions{display:flex;gap:8px;align-items:center}
+  .note{font-size:13px;color:#3b5a52;margin-top:10px}
+  @media(max-width:960px){.panel{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div style="display:flex;align-items:center">
+      <div class="logo"><img src="budhha.png.png" alt="logo"></div>
+      <h1>Intelligent Library System — Teacher Upload</h1>
+    </div>
+    <div class="right muted">Uploads stored in <code>/uploads/</code></div>
+  </header>
+
+  <div class="panel">
+    <div class="card">
+      <h2 style="margin-bottom:12px;color:#064f46">Upload Resource</h2>
+
+      <div class="controls">
+        <div class="row">
+          <div style="flex:1">
+            <label for="year">Year (1 / 2 / 3 / 4)</label>
+            <select id="year">
+              <option value="">--Select Year--</option>
+              <option>1 Year</option>
+              <option>2 Year</option>
+              <option>3 Year</option>
+              <option>4 Year</option>
+            </select>
+          </div>
+          <div style="width:220px">
+            <label for="subject">Subject</label>
+            <select id="subject"><option value="">--Select Subject--</option></select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div style="flex:1">
+            <label for="category">Category</label>
+            <select id="category">
+              <option value="Notes">Notes</option>
+              <option value="E-Books">E-Books</option>
+              <option value="PYQ">PYQ Papers</option>
+              <option value="Important">Important Questions</option>
+              <option value="Budhha Series">Budhha Series</option>
+              <option value="Quantum">Quantum</option>
+            </select>
+          </div>
+          <div style="width:220px" id="pyq-year-wrapper" style="display:none">
+            <label for="pyqYear">Academic Year (for PYQ)</label>
+            <select id="pyqYear">
+              <option value="">--Select Academic Year--</option>
+              <option value="2017-18">2017-18</option>
+              <option value="2018-19">2018-19</option>
+              <option value="2019-20">2019-20</option>
+              <option value="2020-21">2020-21</option>
+              <option value="2021-22">2021-22</option>
+              <option value="2022-23">2022-23</option>
+              <option value="2023-24">2023-24</option>
+              <option value="2024-25">2024-25</option>
+              <option value="addNew">+ Add New Year</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-top:10px">
+          <label for="title">File Title (optional)</label>
+          <input id="title" type="text" placeholder="E.g., Midterm PYQ Set A">
+        </div>
+
+        <div style="margin-top:10px">
+          <label for="file">Choose file</label>
+          <input id="file" type="file" accept=".pdf,.doc,.docx,.txt">
+        </div>
+
+        <div style="margin-top:12px;display:flex;gap:8px">
+          <button class="btn primary" id="uploadBtn">Upload</button>
+          <button class="btn" id="refreshBtn">Refresh List</button>
+          <div style="flex:1"></div>
+          <div class="muted">Note: Uploaded files go to the server's <code>/uploads/</code> folder.</div>
+        </div>
+
+        <div class="note">When you upload a PYQ, select its academic year. You can add a new academic year using the <strong>+ Add New Year</strong> option.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 style="color:#064f46">Files (selected Year & Subject)</h2>
+      <div id="filesList" class="uploaded-list">
+        <div class="muted">Choose Year & Subject and click Refresh List to view files.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Subjects list (full)
+  const SUBJECTS = {
+    "1 Year": ["Math 1","Math 2","Physics","Chemistry","PPS","EVS","Basic Electrical Engineering"],
+    "2 Year": ["Data Structure","COA","DSTL","ESE","Python Programming"],
+    "3 Year": ["Database Management","Artificial Intelligence","Design & Analysis of Algorithm","Computer Networks","Software Engineering"],
+    "4 Year": ["Machine Learning","Cloud Computing","Advanced AI"]
+  };
+
+  const yearEl = document.getElementById('year');
+  const subjectEl = document.getElementById('subject');
+  const categoryEl = document.getElementById('category');
+  const fileEl = document.getElementById('file');
+  const uploadBtn = document.getElementById('uploadBtn');
+  const filesList = document.getElementById('filesList');
+  const refreshBtn = document.getElementById('refreshBtn');
+  const titleEl = document.getElementById('title');
+  const pyqYearWrapper = document.getElementById('pyq-year-wrapper');
+  const pyqYear = document.getElementById('pyqYear');
+
+  function populateSubjects(){
+    subjectEl.innerHTML = '<option value="">--Select Subject--</option>';
+    const y = yearEl.value;
+    if (y && SUBJECTS[y]) {
+      SUBJECTS[y].forEach(s => {
+        const opt = document.createElement('option'); opt.value = s; opt.textContent = s;
+        subjectEl.appendChild(opt);
+      });
+    }
+  }
+
+  yearEl.addEventListener('change',()=>{ populateSubjects(); clearFilesList(); });
+
+  categoryEl.addEventListener('change', ()=>{
+    if (categoryEl.value === 'PYQ') {
+      pyqYearWrapper.style.display = 'block';
+    } else {
+      pyqYearWrapper.style.display = 'none';
+      pyqYear.value = '';
+    }
+  });
+
+  // Add new PYQ year
+  pyqYear.addEventListener('change', ()=>{
+    if (pyqYear.value === 'addNew') {
+      const v = prompt('Enter new academic year (e.g. 2025-26)');
+      if (v) {
+        const o = document.createElement('option'); o.value = v; o.textContent = v;
+        pyqYear.insertBefore(o, pyqYear.lastChild);
+        pyqYear.value = v;
+      } else pyqYear.value = '';
+    }
+  });
+
+  function clearFilesList(){ filesList.innerHTML = '<div class="muted">Choose Year & Subject and click Refresh List to view files.</div>'; }
+
+  async function refreshFiles(){
+    const y = yearEl.value, s = subjectEl.value;
+    if (!y || !s) { alert('Select year and subject'); return; }
+    filesList.innerHTML = '<div class="muted">Loading...</div>';
+    try {
+      const res = await fetch(`/files?year=${encodeURIComponent(y)}&subject=${encodeURIComponent(s)}`);
+      const data = await res.json();
+      if (!data.ok) throw new Error('Server error');
+      if (!data.files.length) {
+        filesList.innerHTML = '<div class="muted">No files uploaded for this Year & Subject.</div>';
+        return;
+      }
+      filesList.innerHTML = '';
+      data.files.forEach(f=>{
+        const item = document.createElement('div'); item.className = 'file-item';
+        const left = document.createElement('div'); left.innerHTML = `<div class="file-meta">${f.name}</div><div class="muted" style="font-weight:600">${(new Date(f.modified)).toLocaleString()}</div>`;
+        const right = document.createElement('div'); right.className='file-actions';
+        const dl = document.createElement('a'); dl.href = f.url; dl.target = '_blank'; dl.className='btn primary'; dl.textContent = 'Open';
+        const remove = document.createElement('button'); remove.className='btn danger'; remove.textContent='Delete';
+        remove.addEventListener('click', async ()=>{
+          if (!confirm('Delete this file from server?')) return;
+          // call server delete (not implemented) — for safety we won't delete on server in this demo.
+          alert('Server-side deletion not implemented in demo. To delete, remove file from uploads/ folder on server.');
+        });
+        right.appendChild(dl); right.appendChild(remove);
+        item.appendChild(left); item.appendChild(right);
+        filesList.appendChild(item);
+      });
+    } catch (err) {
+      console.error(err);
+      filesList.innerHTML = '<div class="muted">Error loading files.</div>';
+    }
+  }
+
+  refreshBtn.addEventListener('click', refreshFiles);
+
+  // Upload handler
+  uploadBtn.addEventListener('click', async ()=>{
+    const y = yearEl.value, s = subjectEl.value, c = categoryEl.value, f = fileEl.files[0];
+    const title = titleEl.value.trim();
+    if (!y || !s) return alert('Select Year and Subject first');
+    if (!f) return alert('Choose a file to upload');
+    if (c === 'PYQ' && !pyqYear.value) return alert('Select academic year for PYQ');
+
+    const fd = new FormData();
+    fd.append('year', y);
+    fd.append('subject', s);
+    fd.append('category', c);
+    fd.append('resourceFile', f);
+    if (title) fd.append('title', title);
+    if (c === 'PYQ') fd.append('pyqYear', pyqYear.value);
+
+    uploadBtn.disabled = true; uploadBtn.textContent = 'Uploading...';
+    try {
+      const res = await fetch('/upload', { method:'POST', body: fd });
+      const data = await res.json();
+      if (data.ok) {
+        alert('Uploaded: ' + data.file.originalName);
+        fileEl.value = ''; titleEl.value = '';
+        refreshFiles();
+      } else {
+        alert('Upload failed');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Upload error');
+    } finally {
+      uploadBtn.disabled = false; uploadBtn.textContent = 'Upload';
+    }
+  });
+
+  // initialize subjects if year preset
+  populateSubjects();
+</script>
+</body>
+</html>
